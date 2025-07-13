@@ -778,19 +778,18 @@ function pauseStream() {
             this.style.transform = 'scale(1)';
         });
 
-        // Initialize the player when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            alert("✅ JS loaded");
-            initializePlayer();
-            
-            // Auto-play if user interacted (for mobile compatibility)
-            document.addEventListener('click', function() {
-                if (!isPlaying && !isLoading) {
-                    // First user interaction - enable audio context
-                    audioPlayer.load();
-                }
-            }, { once: true });
-        });
+       // Initialize the player when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    alert("✅ JS loaded");
+    initializePlayer();
+
+    // Auto‑play if user interacted (for mobile compatibility)
+    document.addEventListener('click', function() {
+      if (!isPlaying && !isLoading) {
+        audioPlayer.load();
+      }
+    }, { once: true });
+  });
 
         // Enhanced mobile audio support
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
