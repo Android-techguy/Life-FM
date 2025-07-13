@@ -518,9 +518,8 @@
             </div>
 
             <div class="controls">
-                <button class="play-btn" id="playBtn" onclick="togglePlay()">
-                  ▶
-                </button>
+               <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+
                 
                 <div class="equalizer" id="equalizer">
                     <div class="eq-bars">
@@ -548,8 +547,8 @@
 
             <audio class="audio-element" id="audioPlayer" preload="none" playsinline>
                <source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/aac">
-                <source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/mp4">
-                <source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/mpeg">
+                 <source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/mp4">
+                 <source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
         </section>
@@ -623,12 +622,13 @@
             audioPlayer.addEventListener('error', handleError);
             audioPlayer.addEventListener('waiting', handleWaiting);
         }
+
 /* ────────────────────────────────────────────────
    PLAY / PAUSE CONTROL FUNCTIONS
    (paste this as‑is, replacing any older versions)
 ────────────────────────────────────────────────── */
 function togglePlay() {
-  alert("🚀 togglePlay() was called");   // debug ‑ shows click reached JS
+  alert("🚀 togglePlay() was called"); // DEBUG
 
   if (isLoading) return;
 
@@ -638,6 +638,7 @@ function togglePlay() {
     playStream();
   }
 }
+
 
 function playStream() {
   alert("📡 playStream() entered");      // debug ‑ confirms we got in
@@ -666,64 +667,6 @@ function pauseStream() {
 }
 /* ──────────────────────────────────────────────── */
 
-
-
-        function updateStatus(text, isLive) {
-            statusText.textContent = text;
-            statusDot.className = isLive ? 'status-dot live' : 'status-dot';
-        }
-
-        // Audio event handlers
-        function handleLoadStart() {
-            updateStatus('Loading...', false);
-        }
-
-        function handleLoadedData() {
-            updateStatus('Ready to play', false);
-        }
-
-        function handleCanPlay() {
-            isLoading = false;
-            updateStatus('Buffering...', false);
-        }
-
-        function handlePlaying() {
-            isPlaying = true;
-            isLoading = false;
-            playBtn.innerHTML = '⏸';
-            updateStatus('🔴 LIVE', true);
-            equalizer.style.display = 'flex';
-            updateTrackInfo();
-        }
-
-        function handlePause() {
-            isPlaying = false;
-            playBtn.innerHTML = '▶';
-            updateStatus('Paused', false);
-            equalizer.style.display = 'none';
-        }
-
-        function handleEnded() {
-            // Stream ended, try to reconnect
-            setTimeout(() => {
-                if (isPlaying) {
-                    playStream();
-                }
-            }, 3000);
-        }
-
-        function handleError(e) {
-            console.error('Audio error:', e);
-            isPlaying = false;
-            isLoading = false;
-            playBtn.innerHTML = '▶';
-            updateStatus('Connection Error - Tap to retry', false);
-            equalizer.style.display = 'none';
-        }
-
-        function handleWaiting() {
-            updateStatus('Buffering...', false);
-        }
 
         // Volume control
         volumeSlider.addEventListener('input', function() {
@@ -783,18 +726,19 @@ function pauseStream() {
             this.style.transform = 'scale(1)';
         });
 
-       // Initialize the player when page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    alert("✅ JS loaded");
-    initializePlayer();
-
-    // Auto‑play if user interacted (for mobile compatibility)
-    document.addEventListener('click', function() {
-      if (!isPlaying && !isLoading) {
-        audioPlayer.load();
-      }
-    }, { once: true });
-  });
+        // Initialize the player when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+         alert("✅ JS loaded");
+            initializePlayer();
+            
+            // Auto-play if user interacted (for mobile compatibility)
+            document.addEventListener('click', function() {
+                if (!isPlaying && !isLoading) {
+                    // First user interaction - enable audio context
+                    audioPlayer.load();
+                }
+            }, { once: true });
+        });
 
         // Enhanced mobile audio support
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
