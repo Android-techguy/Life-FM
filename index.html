@@ -642,7 +642,11 @@
             playBtn.innerHTML = '⏸';
             
             audioPlayer.load(); // Reload the stream
-            audioPlayer.play().catch(handleError);
+          audioPlayer.play().catch((err) => {
+  alert("Audio error: " + (err.message || err));
+  handleError(err);
+});
+
         }
 
         function pauseStream() {
