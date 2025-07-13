@@ -623,8 +623,13 @@
             audioPlayer.addEventListener('error', handleError);
             audioPlayer.addEventListener('waiting', handleWaiting);
         }
+/* ────────────────────────────────────────────────
+   PLAY / PAUSE CONTROL FUNCTIONS
+   (paste this as‑is, replacing any older versions)
+────────────────────────────────────────────────── */
+function togglePlay() {
+  alert("🚀 togglePlay() was called");   // debug ‑ shows click reached JS
 
-        function togglePlay() {
   if (isLoading) return;
 
   if (isPlaying) {
@@ -635,20 +640,18 @@
 }
 
 function playStream() {
-  if (isLoading) return;
+  alert("📡 playStream() entered");      // debug ‑ confirms we got in
 
-  // 🔊 1) Confirm tap reaches here
-  alert("Toggling play — calling audio.play()");
+  if (isLoading) return;
 
   isLoading = true;
   updateStatus('Connecting...', false);
   playBtn.innerHTML = '⏸';
 
-  audioPlayer.load();           // Reload the stream
+  audioPlayer.load();   // Reload the stream
 
-  // 🔊 2) Catch any Safari/iOS audio‑policy errors
   audioPlayer.play().catch((err) => {
-    alert("Audio error: " + (err.message || err));   // <-- Shows *why* it fails
+    alert("Audio error: " + (err.message || err));   // shows exact error
     handleError(err);
   });
 }
@@ -661,6 +664,8 @@ function pauseStream() {
   updateStatus('Stopped', false);
   equalizer.style.display = 'none';
 }
+/* ──────────────────────────────────────────────── */
+
 
 
         function updateStatus(text, isLive) {
