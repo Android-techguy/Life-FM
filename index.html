@@ -625,39 +625,43 @@
         }
 
         function togglePlay() {
-            if (isLoading) return;
+  if (isLoading) return;
 
-            if (isPlaying) {
-                pauseStream();
-            } else {
-                playStream();
-            }
-        }
+  if (isPlaying) {
+    pauseStream();
+  } else {
+    playStream();
+  }
+}
 
-        function playStream() {
-            if (isLoading) return;
-            
-            isLoading = true;
-            updateStatus('Connecting...', false);
-            playBtn.innerHTML = '⏸';
-            
-            audioPlayer.load(); // Reload the stream
-audioPlayer.play().catch((err) => {
-  alert("Audio error: " + (err.message || err));
-  handleError(err);
-});
+function playStream() {
+  if (isLoading) return;
 
+  // 🔊 1) Confirm tap reaches here
+  alert("Toggling play — calling audio.play()");
 
-        }
+  isLoading = true;
+  updateStatus('Connecting...', false);
+  playBtn.innerHTML = '⏸';
 
-        function pauseStream() {
-            audioPlayer.pause();
-            isPlaying = false;
-            isLoading = false;
-            playBtn.innerHTML = '▶';
-            updateStatus('Stopped', false);
-            equalizer.style.display = 'none';
-        }
+  audioPlayer.load();           // Reload the stream
+
+  // 🔊 2) Catch any Safari/iOS audio‑policy errors
+  audioPlayer.play().catch((err) => {
+    alert("Audio error: " + (err.message || err));   // <-- Shows *why* it fails
+    handleError(err);
+  });
+}
+
+function pauseStream() {
+  audioPlayer.pause();
+  isPlaying = false;
+  isLoading = false;
+  playBtn.innerHTML = '▶';
+  updateStatus('Stopped', false);
+  equalizer.style.display = 'none';
+}
+
 
         function updateStatus(text, isLive) {
             statusText.textContent = text;
