@@ -709,10 +709,7 @@ function pauseStream() {
             this.style.transform = 'scale(1)';
         });
 
-        // Initialize the player when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-         alert("✅ JS loaded");
-            initializePlayer();
+      
             
             // Auto-play if user interacted (for mobile compatibility)
             document.addEventListener('click', function() {
@@ -740,11 +737,7 @@ function pauseStream() {
         }
     </script>
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js');
-    });
-  }
+
 </script>
 </div><script>
 document.addEventListener('DOMContentLoaded', function () {
