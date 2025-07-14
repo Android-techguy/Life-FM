@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="yes" name="apple-mobile-web-app-capable">
-<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
-<link href="icons/icon-192.png" rel="apple-touch-icon"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<link href="icons/icon-512.png" rel="apple-touch-icon"/>
 <link href="manifest.json" rel="manifest"/>
-<meta content="#00b388" name="theme-color"/>
+<meta content="#00b388" name="theme-color">
 <title>My Life FM - Live Stream</title>
 <!-- Font Awesome for social media icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
@@ -494,7 +494,7 @@
             }
         }
     </style>
-</meta></meta></head>
+</meta><meta content="My Life FM" name="apple-mobile-web-app-title"/></head>
 <body>
 <div class="phone-container">
 <div class="container">
@@ -709,7 +709,10 @@ function pauseStream() {
             this.style.transform = 'scale(1)';
         });
 
-      
+        // Initialize the player when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+         alert("✅ JS loaded");
+            initializePlayer();
             
             // Auto-play if user interacted (for mobile compatibility)
             document.addEventListener('click', function() {
@@ -737,7 +740,11 @@ function pauseStream() {
         }
     </script>
 <script>
-
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js');
+    });
+  }
 </script>
 </div><script>
 document.addEventListener('DOMContentLoaded', function () {
