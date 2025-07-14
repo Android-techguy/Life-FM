@@ -576,13 +576,178 @@
             Vibe-Streamer © Vs 1.00
         </div>
 </div>
-
-</script>
-</div>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const equalizer = document.getElementById('equalizer');
+        const trackInfo = document.getElementById('trackInfo');
+        const artistInfo = document.getElementById('artistInfo');
 
+        let isPlaying = false;
+        let isLoading = false;
+
+        // Initialize audio player
+        function initializePlayer() {
+            audioPlayer.volume = 0.8;
+            audioPlayer.crossOrigin = "anonymous";
+            
+            // Set up event listeners
+            audioPlayer.addEventListener('loadstart', handleLoadStart);
+            audioPlayer.addEventListener('loadeddata', handleLoadedData);
+            audioPlayer.addEventListener('canplay', handleCanPlay);
+            audioPlayer.addEventListener('playing', handlePlaying);
+            audioPlayer.addEventListener('pause', handlePause);
+            audioPlayer.addEventListener('ended', handleEnded);
+            audioPlayer.addEventListener('error', handleError);
+            audioPlayer.addEventListener('waiting', handleWaiting);
+        }
+
+/* ────────────────────────────────────────────────
+   PLAY / PAUSE CONTROL FUNCTIONS
+   (paste this as‑is, replacing any older versions)
+────────────────────────────────────────────────── */
+function togglePlay() {
+  alert("🚀 togglePlay() was called"); // DEBUG
+
+  if (isLoading) return;
+
+  if (isPlaying) {
+    pauseStream();
+  } else {
+    playStream();
+  }
+}
+
+
+function playStream() {
+  alert("📡 playStream() entered");      // debug ‑ confirms we got in
+
+  if (isLoading) return;
+
+  isLoading = true;
+  updateStatus('Connecting...', false);
+  playBtn.innerHTML = '⏸';
+
+  audioPlayer.load();   // Reload the stream
+
+  audioPlayer.play().catch((err) => {
+    alert("Audio error: " + (err.message || err));   // shows exact error
+    handleError(err);
+  });
+}
+
+function pauseStream() {
+  audioPlayer.pause();
+  isPlaying = false;
+  isLoading = false;
+  playBtn.innerHTML = '▶';
+  updateStatus('Stopped', false);
+  equalizer.style.display = 'none';
+}
+/* ──────────────────────────────────────────────── */
+
+
+        // Volume control
+        volumeSlider.addEventListener('input', function() {
+            const volume = this.value / 100;
+            audioPlayer.volume = volume;
+            volumeValue.textContent = this.value + '%';
+        });
+
+        // Update track information (simulated)
+        function updateTrackInfo() {
+            const tracks = [
+                { title: "Contemporary Music", artist: "To Fuel The Soul" },
+                { title: "Inspiring Music 24/7", artist: "Loving Life, Loving Adelaide" },
+                { title: "Faith • Family • Music", artist: "Steaming 24/7" },
+                { title: "Your Favorite Hits", artist: "Great Positive Music" }
+            ];
+            
+            const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+            trackInfo.textContent = randomTrack.title;
+            artistInfo.textContent = randomTrack.artist;
+        }
+
+        // Rotate track info every 5 seconds when playing
+        setInterval(() => {
+            if (isPlaying) {
+                updateTrackInfo();
+            }
+        }, 30000);
+
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && isPlaying) {
+                // Page is hidden but keep playing
+                updateStatus('🔴 Playing in background', true);
+            } else if (!document.hidden && isPlaying) {
+                // Page is visible again
+                updateStatus('🔴 LIVE', true);
+            }
+        });
+
+        // Prevent audio interruption on mobile
+        window.addEventListener('beforeunload', function() {
+            if (isPlaying) {
+                // Keep the stream alive if possible
+                audioPlayer.pause();
+            }
+        });
+
+        // Touch events for better mobile experience
+        playBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.style.transform = 'scale(0.95)';
+        });
+
+        playBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            this.style.transform = 'scale(1)';
+        });
+
+        // Initialize the player when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+         alert("✅ JS loaded");
+            initializePlayer();
+            
+            // Auto-play if user interacted (for mobile compatibility)
+            document.addEventListener('click', function() {
+                if (!isPlaying && !isLoading) {
+                    // First user interaction - enable audio context
+                    audioPlayer.load();
+                }
+            }, { once: true });
+        });
+
+        // Enhanced mobile audio support
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            // Mobile-specific optimizations
+            audioPlayer.preload = 'none';
+            
+            // Handle mobile audio interruptions
+            audioPlayer.addEventListener('stalled', function() {
+                if (isPlaying) {
+                    setTimeout(() => {
+                        audioPlayer.load();
+                        audioPlayer.play();
+                    }, 1000);
+                }
+            });
+        }
+    </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js');
+    });
+  }
+</script>
+</div><script>
+document.addEventListener('DOMContentLoaded', function () {
   const audio = document.getElementById('audioPlayer');
   const playBtn = document.getElementById('playBtn');
   const equalizer = document.getElementById('equalizer');
@@ -591,6 +756,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const volumeSlider = document.getElementById('volumeSlider');
   const volumeValue = document.getElementById('volumeValue');
 
+  // Tap / click to play‑pause
   playBtn.addEventListener('click', async () => {
     try {
       if (audio.paused) {
@@ -607,17 +773,23 @@ document.addEventListener('DOMContentLoaded', function () {
         statusDot.className = 'status-dot';
       }
     } catch (err) {
-      alert('Audio error: ' + (err.message || err));
-      console.error(err);
+      console.warn('Audio play failed, retrying once...', err);
+      // Retry once after a short delay
+      setTimeout(() => {
+        audio.play().catch(e => {
+          alert('Audio error: ' + (e.message || e));
+          console.error(e);
+        });
+      }, 500);
     }
   });
 
+  // Volume slider
   volumeSlider.addEventListener('input', function () {
-    const volume = this.value / 100;
-    audio.volume = volume;
+    const v = this.value / 100;
+    audio.volume = v;
     volumeValue.textContent = this.value + '%';
   });
 });
-</script>
-</body>
+</script></body>
 </html>
