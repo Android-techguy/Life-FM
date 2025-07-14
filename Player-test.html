@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Life FM mini‑test</title>
+  <style>
+    body{font-family:sans-serif;display:flex;flex-direction:column;align-items:center;margin-top:5rem}
+    button{font-size:3rem;padding:.6rem 1.4rem;border-radius:50%;border:none;background:#00b388;color:#fff}
+  </style>
+</head>
+<body>
+
+<h2>Mini test player</h2>
+<button id="playBtn">▶</button>
+
+<audio id="audio" preload="none" playsinline>
+  <source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/aac">
+</audio>
+
+<script>
+/* ---- SIMPLE PLAYER LOGIC ---- */
+const audio   = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+
+playBtn.addEventListener('click', async () => {
+  try {
+    if (audio.paused) {
+      await audio.play();
+      playBtn.textContent = '⏸';
+    } else {
+      audio.pause();
+      playBtn.textContent = '▶';
+    }
+  } catch (err) {
+    alert('Audio error: ' + (err.message || err));
+    console.error(err);
+  }
+});
+</script>
+</body>
+</html>
