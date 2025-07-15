@@ -8,7 +8,7 @@
 <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
 <link href="icons/icon-512.png" rel="apple-touch-icon"/>
 <link href="manifest.json" rel="manifest"/>
-<meta content="#00b388" name="theme-color">
+<meta content="#00b388" name="theme-color"/>
 <title>My Life FM - Live Stream</title>
 <!-- Font Awesome for social media icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
@@ -494,8 +494,24 @@
             }
         }
     </style>
-</meta><meta content="My Life FM" name="apple-mobile-web-app-title"/></head>
-<body>
+<meta content="My Life FM" name="apple-mobile-web-app-title"/><style>
+  .preloader {
+    position: fixed;
+    z-index: 9999;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #00b388;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+  }
+</style></head>
+<body><div class="preloader" id="splash">Loading My Life FM...</div>
 <div class="phone-container">
 <div class="container">
 <header class="header">
@@ -783,5 +799,12 @@ document.addEventListener('DOMContentLoaded', function () {
     volumeValue.textContent = this.value + '%';
   });
 });
+</script><script>
+  window.addEventListener('load', function () {
+    setTimeout(() => {
+      const splash = document.getElementById('splash');
+      if (splash) splash.style.display = 'none';
+    }, 1200);
+  });
 </script></body>
 </html>
