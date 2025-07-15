@@ -1,9 +1,9 @@
 {
   "name": "My Life FM",
-  "short_name": "LifeFM",
-  "start_url": "./index.html",
+  "short_name": "Life FM",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#1a1a1a",
+  "background_color": "#00b388",
   "theme_color": "#00b388",
   "icons": [
     {
