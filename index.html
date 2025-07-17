@@ -653,20 +653,18 @@ function togglePlay() {
 
 
 function playStream() {
-  alert("📡 playStream() entered");      // debug ‑ confirms we got in
+    if (isLoading) return;
 
-  if (isLoading) return;
+    isLoading = true;
+    updateStatus('Connecting...', false);
+    playBtn.innerHTML = '⏸';
 
-  isLoading = true;
-  updateStatus('Connecting...', false);
-  playBtn.innerHTML = '⏸';
-
-  audioPlayer.load();   // Reload the stream
-
-  audioPlayer.play().catch((err) => {
-    alert("Audio error: " + (err.message || err));   // shows exact error
-    handleError(err);
-  });
+    audioPlayer.load(); // Reload the stream
+    audioPlayer.play().catch((err) => {
+        alert("Audio error: " + (err.message || err));
+        handleError(err);
+    });
+});
 }
 
 function pauseStream() {
