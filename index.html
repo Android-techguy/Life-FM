@@ -510,6 +510,12 @@
 * {
   -webkit-tap-highlight-color: transparent;
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 </style>
 <style>
   .preloader {
@@ -523,6 +529,12 @@
     align-items: center;
     justify-content: center;
   }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 </style></head>
 <body><div class="preloader" id="splash"><img alt="My Life FM" src="https://android-techguy.github.io/Life-FM/splash-logo.png" style="max-width: 80%; height: auto;"/></div>
 <div class="phone-container">
@@ -559,6 +571,10 @@
 <span id="volumeValue">80%</span>
 </div>
 <div class="status-indicator">
+<div id="loadingSpinner" style="display:none; text-align:center; margin-top:10px;">
+  <div style="border: 4px solid #f3f3f3; border-top: 4px solid #00b388; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+</div>
+
 <div class="status-dot" id="statusDot"></div>
 <span id="statusText">Ready to Play</span>
 </div>
