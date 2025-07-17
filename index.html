@@ -1,872 +1,120 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
-<link href="icons/icon-192.png" rel="apple-touch-icon"/>
-<link href="manifest.json" rel="manifest"/>
-<meta content="#00b388" name="theme-color"/>
-<title>My Life FM - Live Stream</title>
-<!-- Font Awesome for social media icons -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #1a1a1a;
-            min-height: 100vh;
-            color: white;
-            overflow-x: hidden;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 20px 10px;
-        }
-
-        .phone-container {
-            width: 375px;
-            max-width: 100vw;
-            height: calc(100vh - 40px);
-            max-height: 95vh;
-            background: linear-gradient(135deg, #244051  0%, #00b388 100%);
-            border-radius: 25px;
-            border: 4px solid #007e7d;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .container {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 12px;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        .logo {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 2px;
-            background: white;
-            border-radius: 70%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 32px rgba(0, 208, 132, 0.3);
-            animation: pulse 2s infinite;
-        }
-
-        .logo img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-        }
-
-        .station-name {
-            font-size: 32px;
-            font-weight: bold;
-            font-family: Calibri; sans-serif;
-            color: #00b388;
-            margin-bottom: 3px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        .tagline {
-            font-size: 14px;
-            opacity: 0.9;
-            font-style: italic;
-            text-align: center;
-        }
-
-        .player-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 1s ease-out 0.3s both;
-        }
-
-        .now-playing {
-            text-align: center;
-            text-shadow: 2px 2px 4px #000000;
-            margin-bottom: 20px;
-            height: 90px; /* Fixed height to prevent resizing */
-        }
-
-        .now-playing h3 {
-            color: #FFFFFF;
-            margin-bottom: 20px;
-            font-size: 15px;
-        }
-
-        .track-info {
-            font-size: 14px;
-            font-style: Italic;
-            font-weight: bold;
-            color:#58c285;
-            margin-bottom: 5px;
-        }
-
-        .artist-info {
-            font-size: 14px;
-            font-style: Italic;
-            font-weight: bold;
-            color: #58c285;
-        }
-
-        .controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 15px;
-            height: 90px; /* Fixed height to prevent layout shift */
-        }
-
-        .play-btn {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #93d483 0%, #009386 100%);
-            border: 3px solid #77cb83;
-            color: white;
-            font-size: 40px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 208, 132, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        .play-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 25px rgba(0, 208, 132, 0.6);
-            background: linear-gradient(90deg, #009386, #93d483);
-        }
-
-        .play-btn:active {
-            transform: scale(0.95);
-        }
-
-        .equalizer {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 90px;
-            gap: 3px;
-            flex-shrink: 0;
-        }
-
-        .eq-bars {
-            display: flex;
-            justify-content: center;
-            align-items: end;
-            height: 40px;
-            gap: 3px;
-        }
-
-        .eq-bar {
-            width: 4px;
-            background: #77cb83;
-            border-radius: 2px;
-            animation: equalizer 1s ease-in-out infinite;
-        }
-
-        .eq-bar:nth-child(1) { animation-delay: 0s; }
-        .eq-bar:nth-child(2) { animation-delay: 0.1s; }
-        .eq-bar:nth-child(3) { animation-delay: 0.2s; }
-        .eq-bar:nth-child(4) { animation-delay: 0.3s; }
-        .eq-bar:nth-child(5) { animation-delay: 0.4s; }
-
-        .eq-label {
-            font-size: 10px;
-            color: #82e0aa;
-            margin-top: 5px;
-            text-align: center;
-        }
-
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .volume-slider {
-            flex: 1;
-            height: 6px;
-            border-radius: 3px;
-            background: rgba(255, 255, 255, 0.3);
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #00d084;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ff4444;
-            animation: blink 1s infinite;
-        }
-
-        .status-dot.live {
-            background: #00d084;
-        }
-
-        .social-links {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-            animation: fadeInUp 1s ease-out 0.6s both;
-        }
-
-        .social-btn {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: none;
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .social-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        /* Social media icon colors on hover */
-        .social-btn.facebook:hover {
-            background: rgba(24, 119, 242, 0.3);
-        }
-
-        .social-btn.instagram:hover {
-          background: linear-gradient(to right, #feda75, #fa7e1e, #d62976, #962fbf);
-        }
-
-        .social-btn.tiktok:hover {
-            background: linear-gradient(to right, #000000, #FF0050, #00F2EA);
-        }
-
-        .social-btn.youtube:hover {
-            background: rgb(205, 32, 31);
-        }
-
-        .social-btn i {
-            font-size: 20px;
-        }
-
-        .website-links {
-            animation: fadeInUp 1s ease-out 0.9s both;
-            margin-bottom: 20px;
-        }
-
-        .website-links h3 {
-            text-align: center;
-            color: #FFFFFF;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .link-grid {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .website-link {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border: none;
-            color: white;
-            padding: 12px;
-            border-radius: 10px;
-            text-decoration: none;
-            text-align: center;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .website-link:hover {
-            background: rgba(119,203,131, 0.8);
-            transform: scale(1.05);
-        }
-
-        .donate-section {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            animation: fadeInUp 1s ease-out 1.2s both;
-        }
-
-        .donate-btn {
-            background: linear-gradient(45deg, #58c285, #00b388);
-            color: white;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 15px rgba(255, 107, 107, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .donate-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.5);
-            background: linear-gradient(45deg, #2fb887, #77cb83);
-        }
-
-        .donate-btn i {
-            font-size: 20px;
-            animation: heartbeat 2s ease-in-out infinite;
-        }
-
-        .version-text {
-            text-align: center;
-            font-size: 10px;
-            opacity: 0.6;
-            margin-top: auto;
-            padding-top: 10px;
-            color: rgba(255, 255, 255, 0.7);
-            animation: fadeInUp 1s ease-out 1.5s both;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% {
-                transform: scale(1);
-            }
-            25% {
-                transform: scale(1.1);
-            }
-            50% {
-                transform: scale(1);
-            }
-            75% {
-                transform: scale(1.1);
-            }
-        }
-
-        .audio-element {
-            display: none;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes blink {
-            0%, 50% {
-                opacity: 1;
-            }
-            51%, 100% {
-                opacity: 0.3;
-            }
-        }
-
-        @keyframes equalizer {
-            0%, 100% { height: 5px; }
-            50% { height: 25px; }
-        }
-
-        @media (max-width: 420px) {
-            body {
-                padding: 0;
-            }
-            
-            .phone-container {
-                width: 100vw;
-                height: 100vh;
-                max-height: 100vh;
-                border-radius: 0;
-                border: none;
-                box-shadow: none;
-            }
-            
-            .container {
-                padding: 15px;
-            }
-            
-            .logo {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .station-name {
-                font-size: 24px;
-            }
-            
-            .play-btn {
-                width: 70px;
-                height: 70px;
-                font-size: 26px;
-            }
-            
-            .equalizer {
-                height: 70px;
-            }
-            
-            .controls {
-                height: 70px;
-                gap: 20px;
-            }
-        }
-    
-.social-btn.facebook:hover {
-    background: rgba(24, 119, 242, 0.3);
-}
-.social-btn.instagram:hover {
-    background: linear-gradient(to right, #feda75, #fa7e1e, #d62976, #962fbf);
-}
-.social-btn.tiktok:hover {
-    background: linear-gradient(to right, #000000, #FF0050, #00F2EA);
-}
-.social-btn.youtube:hover {
-    background: #cd201f;
-}
-
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-</style>
-<style>
-  .preloader {
-    position: fixed;
-    z-index: 9999;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-</style></head>
-<body>
-
-    <div id="loadingSpinner" style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 20px;
-        font-family: Arial, sans-serif;
-        flex-direction: column;
-        text-align: center;">
-        <div class="spinner" style="
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #00b388;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;"></div>
-        <div style="margin-top: 15px;">Connecting...</div>
-    </div>
-
-    <style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeFM Player</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #1a1a1a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .player-container {
+      text-align: center;
+    }
+    .play-btn {
+      font-size: 2rem;
+      padding: 1rem 2rem;
+      background: #00b388;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .status {
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    .spinner {
+      display: none;
+      margin-top: 1rem;
+    }
+    .spinner.visible {
+      display: inline-block;
+      border: 4px solid #ccc;
+      border-top: 4px solid #00b388;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-    </style>
-<div class="preloader" id="splash"><img alt="My Life FM" src="https://android-techguy.github.io/Life-FM/splash-logo.png" style="max-width: 80%; height: auto;"/></div>
-<div class="phone-container">
-<div class="container">
-<header class="header">
-<div class="logo">
-<img alt="My Life FM Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='&lt;div style=\'color: #208785; font-size: 18px; font-weight: bold;\'&gt;MY LIFE FM&lt;/div&gt;'" src="https://mylifefm.com/wp-content/uploads/2023/10/a.png"/>
-</div>
-<h1 class="station-name">MY LIFE FM </h1>
-<p class="tagline">" It's Just The Vibe "</p>
-</header>
-<section class="player-section">
-<div class="now-playing">
-<h3> ♫ Now Playing ♫ </h3>
-<div class="track-info" id="trackInfo">Live Stream</div>
-<div class="artist-info" id="artistInfo">Contemporary Christian Music</div>
-</div>
-<div class="controls">
-<button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-<div class="equalizer" id="equalizer">
-<div class="eq-bars">
-<div class="eq-bar"></div>
-<div class="eq-bar"></div>
-<div class="eq-bar"></div>
-<div class="eq-bar"></div>
-<div class="eq-bar"></div>
-</div>
-<div class="eq-label">LIVE</div>
-</div>
-</div>
-<div class="volume-control">
-<span style="font-size: 150%;"> 🔊</span>
-<input class="volume-slider" id="volumeSlider" max="100" min="0" type="range" value="80"/>
-<span id="volumeValue">80%</span>
-</div>
-<div class="status-indicator">
-<div id="loadingSpinner" style="display:none; text-align:center; margin-top:10px;">
-  <div style="border: 4px solid #f3f3f3; border-top: 4px solid #00b388; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-</div>
+  </style>
+</head>
+<body>
+  <div class="player-container">
+    <button class="play-btn" id="playBtn">▶ Play</button>
+    <div class="status" id="statusText">Ready to play</div>
+    <div class="spinner" id="spinner"></div>
+    <audio id="audioPlayer" preload="none">
+      <source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/aac" />
+    </audio>
+  </div>
 
-<div class="status-dot" id="statusDot"></div>
-<span id="statusText">Ready to Play</span>
-</div>
-<audio class="audio-element" id="audioPlayer" playsinline="" preload="none">
-<source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/aac"/>
-<source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/mp4"/>
-<source src="https://audioworker.jpcurtis58.workers.dev/" type="audio/mpeg"/>
-                Your browser does not support the audio element.
-            </audio>
-</section>
-<section class="social-links">
-<a class="social-btn facebook" href="https://www.facebook.com/LifeFM1079" target="_blank">
-<i class="fab fa-facebook-f"></i>
-                Facebook
-            </a>
-<a class="social-btn instagram" href="https://www.instagram.com/lifefmadelaide/" target="_blank">
-<i class="fab fa-instagram"></i>
-                Instagram
-            </a>
-<a class="social-btn tiktok" href="https://www.tiktok.com/@lifefmadelaide" target="_blank">
-<i class="fab fa-tiktok"></i>
-                TikTok
-            </a>
-<a class="social-btn youtube" href="https://www.youtube.com/channel/UCDMYM0ZQlq2poJy7wbcMvTQ" target="_blank">
-<i class="fab fa-youtube"></i>
-                YouTube
-            </a>
-</section>
-<section class="website-links">
-<h3> 🌏︎ Visit Our Website</h3>
-<div class="link-grid">
-<a class="website-link" href="https://mylifefm.com" target="_blank">Home</a>
-<a class="website-link" href="https://mylifefm.com/about" target="_blank">About</a>
-<a class="website-link" href="https://mylifefm.com/contact" target="_blank">Contact</a>
-</div>
-</section>
-<section class="donate-section">
-<a class="donate-btn" href="https://donate.mylifefm.com.au/" target="_blank">
-<i class="fas fa-hand-holding-heart" style="font-size:24px;color:purple"></i>
-                Donate
-            </a>
-</section>
-<div class="version-text">
-            Vibe-Streamer © Vs 1.00
-        </div>
-</div>
-<script>
-        const audioPlayer = document.getElementById('audioPlayer');
-        const playBtn = document.getElementById('playBtn');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeValue = document.getElementById('volumeValue');
-        const statusDot = document.getElementById('statusDot');
-        const statusText = document.getElementById('statusText');
-        const equalizer = document.getElementById('equalizer');
-        const trackInfo = document.getElementById('trackInfo');
-        const artistInfo = document.getElementById('artistInfo');
+  <script>
+    const playBtn = document.getElementById('playBtn');
+    const statusText = document.getElementById('statusText');
+    const spinner = document.getElementById('spinner');
+    const audioPlayer = document.getElementById('audioPlayer');
 
-        let isPlaying = false;
-        let isLoading = false;
+    let isPlaying = false;
 
-        // Initialize audio player
-        function initializePlayer() {
-            audioPlayer.volume = 0.8;
-            audioPlayer.crossOrigin = "anonymous";
-            
-            // Set up event listeners
-            audioPlayer.addEventListener('loadstart', handleLoadStart);
-            audioPlayer.addEventListener('loadeddata', handleLoadedData);
-            audioPlayer.addEventListener('canplay', handleCanPlay);
-            audioPlayer.addEventListener('playing', handlePlaying);
-            audioPlayer.addEventListener('pause', handlePause);
-            audioPlayer.addEventListener('ended', handleEnded);
-            audioPlayer.addEventListener('error', handleError);
-            audioPlayer.addEventListener('waiting', handleWaiting);
-        }
-
-/* ────────────────────────────────────────────────
-   PLAY / PAUSE CONTROL FUNCTIONS
-   (paste this as‑is, replacing any older versions)
-────────────────────────────────────────────────── */
-function togglePlay() {
-  alert("🚀 togglePlay() was called"); // DEBUG
-
-  if (isLoading) return;
-
-  if (isPlaying) {
-    pauseStream();
-  } else {
-    playStream();
-  }
-}
-
-
-function playStream() {
-    if (isLoading) return;
-
-    isLoading = true;
-    updateStatus('Connecting...', false); document.getElementById('loadingSpinner').style.display = 'flex';
-    playBtn.innerHTML = '⏸';
-
-    audioPlayer.load(); // Reload the stream
-    audioPlayer.play().catch((err) => {
-        alert("Audio error: " + (err.message || err));
-        handleError(err);
-    });
-});
-}
-
-function pauseStream() {
-  audioPlayer.pause();
-  isPlaying = false;
-  isLoading = false;
-  playBtn.innerHTML = '▶';
-  updateStatus('Stopped', false);
-  equalizer.style.display = 'none';
-}
-/* ──────────────────────────────────────────────── */
-
-
-        // Volume control
-        volumeSlider.addEventListener('input', function() {
-            const volume = this.value / 100;
-            audioPlayer.volume = volume;
-            volumeValue.textContent = this.value + '%';
-        });
-
-        // Update track information (simulated)
-        function updateTrackInfo() {
-            const tracks = [
-                { title: "Contemporary Music", artist: "To Fuel The Soul" },
-                { title: "Inspiring Music 24/7", artist: "Loving Life, Loving Adelaide" },
-                { title: "Faith • Family • Music", artist: "Steaming 24/7" },
-                { title: "Your Favorite Hits", artist: "Great Positive Music" }
-            ];
-            
-            const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
-            trackInfo.textContent = randomTrack.title;
-            artistInfo.textContent = randomTrack.artist;
-        }
-
-        // Rotate track info every 5 seconds when playing
-        setInterval(() => {
-            if (isPlaying) {
-                updateTrackInfo();
-            }
-        }, 30000);
-
-        // Handle page visibility changes
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden && isPlaying) {
-                // Page is hidden but keep playing
-                updateStatus('🔴 Playing in background', true);
-            } else if (!document.hidden && isPlaying) {
-                // Page is visible again
-                updateStatus('🔴 LIVE', true);
-            }
-        });
-
-        // Prevent audio interruption on mobile
-        window.addEventListener('beforeunload', function() {
-            if (isPlaying) {
-                // Keep the stream alive if possible
-                audioPlayer.pause();
-            }
-        });
-
-        // Touch events for better mobile experience
-        playBtn.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            this.style.transform = 'scale(0.95)';
-        });
-
-        playBtn.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            this.style.transform = 'scale(1)';
-        });
-
-      
-            
-            // Auto-play if user interacted (for mobile compatibility)
-            document.addEventListener('click', function() {
-                if (!isPlaying && !isLoading) {
-                    // First user interaction - enable audio context
-                    audioPlayer.load();
-                }
-            }, { once: true });
-        });
-
-        // Enhanced mobile audio support
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-            // Mobile-specific optimizations
-            audioPlayer.preload = 'none';
-            
-            // Handle mobile audio interruptions
-            audioPlayer.addEventListener('stalled', function() {
-                if (isPlaying) {
-                    setTimeout(() => {
-                        audioPlayer.load();
-                        audioPlayer.play();
-                    }, 1000);
-                }
-            });
-        }
-    </script>
-<script>
-</script>
-</div><script>
-document.addEventListener('DOMContentLoaded', function () {
-  const audio = document.getElementById('audioPlayer');
-  const playBtn = document.getElementById('playBtn');
-  const equalizer = document.getElementById('equalizer');
-  const statusText = document.getElementById('statusText');
-  const statusDot = document.getElementById('statusDot');
-  const volumeSlider = document.getElementById('volumeSlider');
-  const volumeValue = document.getElementById('volumeValue');
-
-  // Tap / click to play‑pause
-  playBtn.addEventListener('click', async () => {
-    try {
-      if (audio.paused) {
-        await audio.play();
-        playBtn.textContent = '⏸';
-        equalizer.style.display = 'flex';
-        statusText.textContent = '🔴 LIVE';
-        statusDot.className = 'status-dot live';
+    function togglePlay() {
+      if (isPlaying) {
+        audioPlayer.pause();
       } else {
-        audio.pause();
-        playBtn.textContent = '▶';
-        equalizer.style.display = 'none';
-        statusText.textContent = 'Stopped';
-        statusDot.className = 'status-dot';
-      }
-    } catch (err) {
-      console.warn('Audio play failed, retrying once...', err);
-      // Retry once after a short delay
-      setTimeout(() => {
-        audio.play().catch(e => {
-          alert('Audio error: ' + (e.message || e));
-          console.error(e);
+        showSpinner();
+        statusText.textContent = "Connecting...";
+        audioPlayer.load();
+        audioPlayer.play().catch(err => {
+          statusText.textContent = "Playback failed";
+          hideSpinner();
         });
-      }, 500);
+      }
     }
-  });
 
-  // Volume slider
-  volumeSlider.addEventListener('input', function () {
-    const v = this.value / 100;
-    audio.volume = v;
-    volumeValue.textContent = this.value + '%';
-  });
-});
-</script><script>
-  window.addEventListener('load', function () {
-    setTimeout(() => {
-      const splash = document.getElementById('splash');
-      if (splash) splash.style.display = 'none';
-    }, 1200);
-  });
-</script></body>
+    function showSpinner() {
+      spinner.classList.add("visible");
+    }
+
+    function hideSpinner() {
+      spinner.classList.remove("visible");
+    }
+
+    audioPlayer.addEventListener("playing", () => {
+      statusText.textContent = "🔴 LIVE";
+      hideSpinner();
+      playBtn.textContent = "⏸ Pause";
+      isPlaying = true;
+    });
+
+    audioPlayer.addEventListener("pause", () => {
+      statusText.textContent = "Paused";
+      playBtn.textContent = "▶ Play";
+      isPlaying = false;
+    });
+
+    audioPlayer.addEventListener("waiting", () => {
+      statusText.textContent = "Buffering...";
+      showSpinner();
+    });
+
+    audioPlayer.addEventListener("canplay", () => {
+      hideSpinner();
+    });
+
+    playBtn.addEventListener("click", togglePlay);
+  </script>
+</body>
 </html>
