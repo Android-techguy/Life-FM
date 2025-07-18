@@ -784,57 +784,71 @@ function pauseStream() {
 <script>
 </script>
 </div><script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
   const audio = document.getElementById('audioPlayer');
   const playBtn = document.getElementById('playBtn');
   const equalizer = document.getElementById('equalizer');
   const statusText = document.getElementById('statusText');
   const statusDot = document.getElementById('statusDot');
+  const spinner = document.getElementById('spinnerOverlay');
   const volumeSlider = document.getElementById('volumeSlider');
   const volumeValue = document.getElementById('volumeValue');
 
-  // Tap / click to play‑pause
-  playBtn.addEventListener('click', async () => {
-    try {
-      if (audio.paused) {
-        await audio.play();
-        playBtn.textContent = '⏸';
-        equalizer.style.display = 'flex';
-        statusText.textContent = '🔴 LIVE';
-        statusDot.className = 'status-dot live';
-      } else {
-        audio.pause();
-        playBtn.textContent = '▶';
-        equalizer.style.display = 'none';
-        statusText.textContent = 'Stopped';
-        statusDot.className = 'status-dot';
-      }
-    } catch (err) {
-      console.warn('Audio play failed, retrying once...', err);
-      // Retry once after a short delay
-      setTimeout(() => {
-        audio.play().catch(e => {
-          alert('Audio error: ' + (e.message || e));
-          console.error(e);
-        });
-      }, 500);
-    }
-  });
+  let isPlaying = false;
 
-  // Volume slider
+  function updateStatus(text, isLive = false) {
+    statusText.textContent = text;
+    statusDot.className = isLive ? 'status-dot live' : 'status-dot';
+  }
+
+  async function togglePlay() {
+    if (!audio.paused) {
+      audio.pause();
+      playBtn.textContent = '▶';
+      equalizer.style.display = 'none';
+      updateStatus('Stopped', false);
+      return;
+    }
+
+    // Show spinner overlay
+    spinner.style.display = 'flex';
+    updateStatus('Connecting...', false);
+    playBtn.textContent = '⏸';
+
+    try {
+      audio.load();
+      await audio.play();
+      spinner.style.display = 'none';
+      playBtn.textContent = '⏸';
+      equalizer.style.display = 'flex';
+      updateStatus('🔴 LIVE', true);
+    } catch (err) {
+      spinner.style.display = 'none';
+      playBtn.textContent = '▶';
+      equalizer.style.display = 'none';
+      updateStatus('Error: Tap to retry', false);
+      console.error('Play error:', err);
+      alert('Audio failed: ' + err.message);
+    }
+  }
+
+  playBtn.addEventListener('click', togglePlay);
+
   volumeSlider.addEventListener('input', function () {
     const v = this.value / 100;
     audio.volume = v;
     volumeValue.textContent = this.value + '%';
   });
+
+  // Splash screen hide
+  setTimeout(() => {
+    const splash = document.getElementById('splash');
+    if (splash) splash.style.display = 'none';
+  }, 1200);
 });
-</script><script>
-  window.addEventListener('load', function () {
-    setTimeout(() => {
-      const splash = document.getElementById('splash');
-      if (splash) splash.style.display = 'none';
-    }, 1200);
-  });
+</script>
+
 </script>
 <!-- Spinner Overlay -->
 <div id="spinnerOverlay" style="
