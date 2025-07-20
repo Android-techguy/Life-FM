@@ -504,7 +504,26 @@
   100% { transform: rotate(360deg); }
 }
 
-</style></head>
+</style>
+<!-- PWA Service Worker Setup -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2196F3">
+<script>
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('ServiceWorker registered successfully');
+      })
+      .catch(function(error) {
+        console.log('ServiceWorker registration failed:', error);
+      });
+  });
+}
+</script>
+
+</head>
 <body><div class="preloader" id="splash"><img alt="My Life FM" src="https://android-techguy.github.io/Life-FM/splash-logo.png" style="max-width: 80%; height: auto;"/></div>
 <div class="phone-container">
 <div class="container">
