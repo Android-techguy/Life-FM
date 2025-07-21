@@ -1,0 +1,43 @@
+{
+  "name": "My Life FM",
+  "short_name": "Life FM",
+  "description": "Contemporary Christian Music streaming 24/7 - It's Just The Vibe",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#00b388",
+  "theme_color": "#00b388",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "lang": "en-AU",
+  "categories": ["music", "entertainment", "lifestyle"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Play Live Stream",
+      "short_name": "Play",
+      "description": "Start playing My Life FM live stream",
+      "url": "./?action=play",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
