@@ -847,6 +847,20 @@ document.addEventListener('DOMContentLoaded', function () {
   updateTrackInfo();
 });
 </script>
+<script>
+console.log('🔍 Debug: Service Worker support:', 'serviceWorker' in navigator);
+console.log('🔍 Debug: Current URL:', window.location.href);
+console.log('🔍 Debug: Is HTTPS:', window.location.protocol === 'https:');
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(registration => {
+      console.log('✅ Registration successful:', registration);
+    })
+    .catch(error => {
+      console.error('❌ Registration failed:', error);
+    });
+}
+</script>
 </body>
 </html>
