@@ -505,20 +505,96 @@
 }
 
 </style>
-<!-- PWA Service Worker Setup -->
 <script>
-// Register Service Worker
+// Enhanced PWA Service Worker Registration
+// Replace the existing service worker script in your index.html with this:
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('/sw.js')
       .then(function(registration) {
-        console.log('ServiceWorker registered successfully');
+        console.log('✅ ServiceWorker registered successfully with scope:', registration.scope);
+        
+        // Check for updates
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // New update available
+              console.log('🔄 New update available! Refresh to update.');
+              // Optional: Show update notification to user
+              if (confirm('New version available! Refresh to update?')) {
+                window.location.reload();
+              }
+            }
+          });
+        });
       })
       .catch(function(error) {
-        console.log('ServiceWorker registration failed:', error);
+        console.error('❌ ServiceWorker registration failed:', error);
       });
+
+    // Listen for service worker messages
+    navigator.serviceWorker.addEventListener('message', function(event) {
+      console.log('📨 Message from service worker:', event.data);
+    });
+
+    // Check if app is running in standalone mode (installed as PWA)
+    let displayMode = 'browser';
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      displayMode = 'standalone';
+      console.log('📱 Running as PWA');
+    } else if (window.navigator.standalone === true) {
+      displayMode = 'standalone';
+      console.log('📱 Running as PWA (iOS)');
+    } else {
+      console.log('🌐 Running in browser');
+    }
+
+    // Add install prompt functionality
+    let deferredPrompt;
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+      console.log('💾 Install prompt available');
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Optional: Show custom install button
+      // You can add a button to your UI and call showInstallPrompt()
+    });
+
+    // Function to show install prompt (call this from a button click)
+    window.showInstallPrompt = () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('✅ User accepted the install prompt');
+          } else {
+            console.log('❌ User dismissed the install prompt');
+          }
+          deferredPrompt = null;
+        });
+      }
+    };
+
+    // Listen for app installation
+    window.addEventListener('appinstalled', (evt) => {
+      console.log('🎉 App was installed successfully');
+    });
   });
 }
+
+// Optional: Add connection status monitoring
+window.addEventListener('online', function() {
+  console.log('🟢 Back online');
+  // Optional: Show online status to user
+});
+
+window.addEventListener('offline', function() {
+  console.log('🔴 Gone offline');
+  // Optional: Show offline status to user
+});
 </script>
 
 </head>
@@ -771,6 +847,6 @@ document.addEventListener('DOMContentLoaded', function () {
   updateTrackInfo();
 });
 </script>
-<script> src="sw.js"></script>
+
 </body>
 </html>
