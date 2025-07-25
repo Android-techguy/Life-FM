@@ -4,7 +4,9 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta name="mobile-web-app-capable" content="yes">
 <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<link rel="apple-touch-startup-image" href="icons/splash-logo.png">
 <link href="icons/icon-192.png" rel="apple-touch-icon"/>
 <link href="manifest.json" rel="manifest"/>
 <meta content="#00b388" name="theme-color"/>
@@ -42,7 +44,65 @@
             position: relative;
             overflow: hidden;
         }
+/* Add this CSS to your existing styles - place it after your .phone-container styles */
 
+/* S-shaped color bands container */
+.color-bands {
+    position: absolute;
+    top: 35%; /* Positioned around the play button area */
+    left: 0;
+    right: 0;
+    height: 240px; /* Reduced height to bring bands closer */
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none; /* Allows clicks to pass through to elements below */
+    overflow: hidden;
+}
+
+/* Individual color bands */
+.color-band {
+    position: absolute;
+    width: 120%; /* Back to full app width */
+    height: 500px; /* Made each band much wider: 120px * 2.2 = 264px */
+    left: -10%; /* Back to original positioning */
+    opacity: 0.2; /* Semi-transparent so content shows through */
+}
+/* First band (top) - lifted 50px higher */
+.color-band-1 {
+    top: -35px; /* Moved up 50px from 5px */
+    background: linear-gradient(45deg, #009386, #77cb83);
+    clip-path: path("M 0 220 Q 100 44 200 132 Q 300 220 400 132 L 400 0 Q 300 176 200 88 Q 100 0 0 88 Z");
+    transform: scaleX(1.2);
+}
+
+
+/* Third band (bottom) - lifted 50px higher */
+
+
+/* Make sure container content appears above the bands */
+.container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Optional: Add subtle animation to make bands "flow" */
+@keyframes flowBands {
+    0% { transform: translateX(0) scaleX(1.2); }
+    50% { transform: translateX(10px) scaleX(1.25); }
+    100% { transform: translateX(0) scaleX(1.2); }
+}
+
+.color-band {
+    animation: flowBands 6s ease-in-out infinite;
+}
+
+.color-band-2 {
+    animation-delay: 2s;
+}
+
+.color-band-3 {
+    animation-delay: 4s;
+}
         .container {
             width: 100%;
             height: 100%;
@@ -100,17 +160,23 @@
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 40px;
+            border-style: solid;
+            border-width: thin;
+            border-color: #00b388;
+            padding: 10px;
+            margin-bottom: 10px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             animation: fadeInUp 1s ease-out 0.3s both;
+            margin-left: 30px;
+            margin-right: 30px;
+            
         }
 
         .now-playing {
             text-align: center;
             text-shadow: 2px 2px 4px #000000;
             margin-bottom: 20px;
-            height: 90px; /* Fixed height to prevent resizing */
+            height: 60px; /* Fixed height to prevent resizing */
         }
 
         .now-playing h3 {
@@ -123,7 +189,7 @@
             font-size: 14px;
             font-style: Italic;
             font-weight: bold;
-            color:#58c285;
+            color:#00b388;
             margin-bottom: 5px;
         }
 
@@ -131,7 +197,7 @@
             font-size: 14px;
             font-style: Italic;
             font-weight: bold;
-            color: #58c285;
+            color: #00b388;
         }
 
         .controls {
@@ -144,8 +210,8 @@
         }
 
         .play-btn {
-            width: 65px;
-            height: 65px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: linear-gradient(135deg, #93d483 0%, #009386 100%);
             border: 3px solid #77cb83;
@@ -212,7 +278,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .volume-slider {
@@ -255,49 +321,68 @@
             background: #00d084;
         }
 
-        .social-links {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-            animation: fadeInUp 1s ease-out 0.6s both;
-        }
+/* Center the social buttons grid */
+.social-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+    animation: fadeInUp 1s ease-out 0.6s both;
+    justify-content: center; /* Center the grid */
+    width: fit-content; /* Only take up space needed */
+    margin-left: auto;
+    margin-right: auto;
+}
 
-        .social-btn {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: none;
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: normal;
-            transition: all 0.3s ease;
-        }
+/* Buttons sized to fit neatly around 40px icons */
+.social-btn {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: none;
+    color: white;
+    padding: 8px; /* Compact padding around 40px icons */
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border-style: solid;
+    border-width: thin;
+    border-color: #00b388;
+    font-size: 14px;
+    font-weight: normal;
+    transition: all 0.3s ease;
+    width: 122px; /* 40px icon + 8px padding on each side */
+    height: 50px; /* Square buttons for square icons */
+}
+
+.social-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Your 40px x 40px PNG icons */
+.social-btn img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
 
         .social-btn:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
 
-        /* Social media icon colors on hover */
-        .social-btn.facebook:hover {
-      }
-
         .website-links {
             animation: fadeInUp 1s ease-out 0.9s both;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .website-links h3 {
             text-align: center;
             color: #FFFFFF;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-size: 14px;
         }
 
@@ -317,18 +402,21 @@
             text-decoration: none;
             text-align: center;
             font-size: 12px;
+            border-style: solid;
+            border-width: thin;
+            border-color: #00b388;
             transition: all 0.3s ease;
         }
 
         .website-link:hover {
-            background: rgba(119,203,131, 0.8);
+            background: rgba(255, 255, 255, 0.2);
             transform: scale(1.05);
         }
 
         .donate-section {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             animation: fadeInUp 1s ease-out 1.2s both;
         }
 
@@ -338,6 +426,9 @@
             text-decoration: none;
             padding: 10px 18px;
             border-radius: 20px;
+            border-style: solid;
+            border-width: thin;
+            border-color: #00b388;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -598,12 +689,18 @@ window.addEventListener('offline', function() {
 </script>
 
 </head>
-<body><div class="preloader" id="splash"><img alt="My Life FM" src="https://android-techguy.github.io/Life-FM/splash-logo.png" style="max-width: 80%; height: auto;"/></div>
+<div class="preloader" id="splash"><img alt="My Life FM" src="icons/splash-logo.png" style="max-width: 80%; height: auto;"/></div>
 <div class="phone-container">
 <div class="container">
+<!-- Add this right after <div class="phone-container"> -->
+<div class="color-bands">
+    <div class="color-band color-band-1"></div>
+    <div class="color-band color-band-2"></div>
+    <div class="color-band color-band-3"></div>
+</div>
 <header class="header">
 <div class="logo">
-<img alt="My Life FM Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='&lt;div style=\'color: #208785; font-size: 18px; font-weight: bold;\'&gt;MY LIFE FM&lt;/div&gt;'" src="https://mylifefm.com/wp-content/uploads/2023/10/a.png"/>
+<img alt="My Life FM Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='&lt;div style=\'color: #208785; font-size: 18px; font-weight: bold;\'&gt;MY LIFE FM&lt;/div&gt;'" src="icons/life_fm_logo.png"/>
 </div>
 <h1 class="station-name">MY LIFE FM </h1>
 <p class="tagline">" It's Just The Vibe "</p>
@@ -648,29 +745,30 @@ window.addEventListener('offline', function() {
             </audio>
 </section>
 <section class="social-links">
-<a class="social-btn facebook" href="https://www.facebook.com/LifeFM1079" target="_blank">
-<i class="fab fa-facebook-f" style='font-size:24px;color:blue'></i>
-                Facebook
+            <a class="social-btn facebook" href="https://www.facebook.com/LifeFM1079" target="_blank">
+                <img src="icons/facebook.png" alt="Facwbook" class="social-icon"> Facebook
+       
             </a>
-<a class="social-btn instagram" href="https://www.instagram.com/lifefmadelaide/" target="_blank">
-<i class="fab fa-instagram" style='font-size:24px;color:red'></i>
-                Instagram
+            <a class="social-btn instagram" href="https://www.instagram.com/lifefmadelaide/" target="_blank">
+                <img src="icons/instagram.png" alt="Instagram" class="social-icon"> Instagram
+            
             </a>
-<a class="social-btn tiktok" href="https://www.tiktok.com/@lifefmadelaide" target="_blank">
-<i class="fab fa-tiktok" style='font-size:24px;color:black'></i>
-                TikTok
+            <a class="social-btn tiktok" href="https://www.tiktok.com/@lifefmadelaide" target="_blank">
+                <img src="icons/tiktok.png" alt="TikTok" class="social-icon"> Tiktok
+                
             </a>
-<a class="social-btn youtube" href="https://www.youtube.com/channel/UCDMYM0ZQlq2poJy7wbcMvTQ" target="_blank">
-<i class="fab fa-youtube" style='font-size:24px;color:red'></i>
-                YouTube
+            <a class="social-btn youtube" href="https://www.youtube.com/channel/UCDMYM0ZQlq2poJy7wbcMvTQ" target="_blank">
+                <img src="icons/youtube.png" alt="YouTube" class="social-icon"> YouTube
+                
             </a>
+        </section>
 </section>
 <section class="website-links">
 <h3> 🌏︎ Visit Our Website</h3>
 <div class="link-grid">
 <a class="website-link" href="https://mylifefm.com" target="_blank">Home</a>
-<a class="website-link" href="https://mylifefm.com/about-us/" target="_blank">About</a>
 <a class="website-link" href="https://mylifefm.com/contact" target="_blank">Contact</a>
+<a class="website-link" href="https://mylifefm.com/about-us/" target="_blank">About</a>
 </div>
 </section>
 <section class="donate-section">
@@ -690,8 +788,8 @@ window.addEventListener('offline', function() {
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: normal;
     display: none;
     align-items: center;
     justify-content: center;
@@ -707,7 +805,7 @@ window.addEventListener('offline', function() {
       animation: spin 1s linear infinite;
       margin-bottom: 10px;
   "></div>
-  <div>Connecting...</div>
+  <div>Connecting to Life FM...</div>
 </div>
 
 <script>
@@ -754,7 +852,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function startTrackRotation() {
     if (!trackInterval) {
       updateTrackInfo(); // Update immediately
-      trackInterval = setInterval(updateTrackInfo, 15000); // Then every 15 seconds
+      trackInterval = setInterval(updateTrackInfo, 10000); // Then every 10 seconds
     }
   }
 
@@ -782,7 +880,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Start the stream
     spinner.style.display = 'flex';
-    updateStatus('Connecting...', false);
+    updateStatus('Connecting to Life FM....', false);
     playBtn.textContent = '⏸';
 
     try {
@@ -847,20 +945,6 @@ document.addEventListener('DOMContentLoaded', function () {
   updateTrackInfo();
 });
 </script>
-<script>
-console.log('🔍 Debug: Service Worker support:', 'serviceWorker' in navigator);
-console.log('🔍 Debug: Current URL:', window.location.href);
-console.log('🔍 Debug: Is HTTPS:', window.location.protocol === 'https:');
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js')
-    .then(registration => {
-      console.log('✅ Registration successful:', registration);
-    })
-    .catch(error => {
-      console.error('❌ Registration failed:', error);
-    });
-}
-</script>
 </body>
 </html>
